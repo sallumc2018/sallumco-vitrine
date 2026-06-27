@@ -1,0 +1,165 @@
+---
+import Layout from '../layouts/Layout.astro'
+import ProductCard from '../components/ProductCard.astro'
+import catalogo from '../data/catalogo.json'
+
+export function getStaticPaths() {
+  return catalogo.categories.map(cat => ({
+    params: { slug: cat.slug },
+    props: { category: cat }
+  }))
+}
+
+const { category } = Astro.props
+const count = category.products.length
+---
+
+<Layout title={`${category.name} — SallumC Co. & Family`}>
+  <nav class="bg-white border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center gap-4 text-sm">
+      <a href="/" class="text-brand hover:underline font-medium">&larr; Voltar</a>
+      <span class="text-gray-300">|</span>
+      <span class="text-gray-600">{category.name}</span>
+      <span id="product-count" class="text-gray-400 text-xs bg-gray-100 px-2 py-0.5 rounded-full">{count} produtos</span>
+    </div>
+  </nav>
+
+  <main class="max-w-7xl mx-auto">
+    <div class="px-4 pt-6 pb-2 flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">{category.name}</h1>
+        <p id="showing-info" class="text-gray-500 text-sm mt-1">Carregando...</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <label for="sort" class="text-xs text-gray-500 font-medium">Ordenar:</label>
+        <select id="sort" class="text-sm border border-gray-200 rounded-lg px-3 py-1.5 bg-white text-gray-700 outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand/50">
+          <option value="">Padrão</option>
+          <option value="name-asc">Nome A-Z</option>
+          <option value="name-desc">Nome Z-A</option>
+          <option value="price-asc">Menor preço</option>
+          <option value="price-desc">Maior preço</option>
+          <option value="sales-desc">Mais vendidos</option>
+          <option value="discount-desc">Maior desconto</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 px-4 pb-4">
+      {category.products.map(p => (
+        <ProductCard
+          name={p.name}
+          link={p.link}
+          image={p.image}
+          price={p.price}
+          discount={p.discount}
+          sales={p.sales}
+          commission={p.commission}
+        />
+      ))}
+    </div>
+
+    <div id="pagination" class="flex items-center justify-center gap-2 px-4 pb-8 pt-2 flex-wrap"></div>
+  </main>
+
+  <footer class="bg-gray-950 text-white mt-8">
+    <div class="max-w-7xl mx-auto px-4 py-8 text-center text-gray-600 text-xs">
+      <p>&copy; 2026 SallumC Co. & Family. Links de afiliado.</p>
+      <a href="/" class="text-brand hover:underline mt-1 inline-block">Voltar ao início</a>
+    </div>
+  </footer>
+
+  <script>
+    const PER_PAGE = 20
+    const grid = document.getElementById('product-grid')
+    const pagination = document.getElementById('pagination')
+    const showingInfo = document.getElementById('showing-info')
+    const sortSelect = document.getElementById('sort')
+
+    let cards = Array.from(grid.querySelectorAll('.product-card'))
+    let currentPage = 1
+    let currentSort = ''
+
+    const getPrice = el => parseFloat(el.dataset.price) || Infinity
+    const getSales = el => parseFloat(el.dataset.sales) || 0
+    const getDiscount = el => parseFloat(el.dataset.discount) || 0
+    const getName = el => el.querySelector('h3')?.textContent || ''
+
+    function getSorted() {
+      let sorted = [...cards]
+      switch (currentSort) {
+        case 'name-asc':    sorted.sort((a, b) => getName(a).localeCompare(getName(b), 'pt-BR')); break
+        case 'name-desc':   sorted.sort((a, b) => getName(b).localeCompare(getName(a), 'pt-BR')); break
+        case 'price-asc':   sorted.sort((a, b) => getPrice(a) - getPrice(b)); break
+        case 'price-desc':  sorted.sort((a, b) => getPrice(b) - getPrice(a)); break
+        case 'sales-desc':  sorted.sort((a, b) => getSales(b) - getSales(a)); break
+        case 'discount-desc': sorted.sort((a, b) => getDiscount(b) - getDiscount(a)); break
+      }
+      return sorted
+    }
+
+    function render() {
+      const sorted = getSorted()
+      const total = sorted.length
+      const totalPages = Math.ceil(total / PER_PAGE)
+
+      if (currentPage > totalPages) currentPage = totalPages
+      if (currentPage < 1) currentPage = 1
+
+      const start = (currentPage - 1) * PER_PAGE
+      const end = Math.min(start + PER_PAGE, total)
+
+      sorted.forEach((card, i) => {
+        card.style.display = (i >= start && i < end) ? '' : 'none'
+      })
+
+      sorted.forEach(card => grid.appendChild(card))
+
+      showingInfo.textContent = `Mostrando ${start + 1}–${end} de ${total} produtos`
+
+      let html = ''
+      html += `<button id="prev-page" class="px-3 py-1.5 text-sm border rounded-lg transition-colors ${
+        currentPage <= 1 ? 'border-gray-100 text-gray-300 cursor-not-allowed' : 'border-gray-200 hover:bg-gray-50'
+      }" ${currentPage <= 1 ? 'disabled' : ''}>Anterior</button>`
+
+      for (let i = 1; i <= totalPages; i++) {
+        const active = i === currentPage
+        html += `<button class="page-btn px-3 py-1.5 text-sm border rounded-lg transition-colors ${
+          active ? 'bg-brand text-white border-brand' : 'border-gray-200 hover:bg-gray-50'
+        }" data-page="${i}">${i}</button>`
+      }
+
+      html += `<button id="next-page" class="px-3 py-1.5 text-sm border rounded-lg transition-colors ${
+        currentPage >= totalPages ? 'border-gray-100 text-gray-300 cursor-not-allowed' : 'border-gray-200 hover:bg-gray-50'
+      }" ${currentPage >= totalPages ? 'disabled' : ''}>Próximo</button>`
+
+      pagination.innerHTML = html
+
+      document.querySelectorAll('.page-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          currentPage = parseInt(btn.dataset.page)
+          render()
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+        })
+      })
+
+      const prevBtn = document.getElementById('prev-page')
+      if (prevBtn) prevBtn.addEventListener('click', () => {
+        if (currentPage > 1) { currentPage--; render(); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+      })
+
+      const nextBtn = document.getElementById('next-page')
+      if (nextBtn) nextBtn.addEventListener('click', () => {
+        const totalPages = Math.ceil(total / PER_PAGE)
+        if (currentPage < totalPages) { currentPage++; render(); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+      })
+    }
+
+    sortSelect.addEventListener('change', () => {
+      currentSort = sortSelect.value
+      currentPage = 1
+      render()
+    })
+
+    render()
+  </script>
+</Layout>

@@ -1,0 +1,108 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand: #7C3AED;
+  --color-brand-dark: #6D28D9;
+  --color-cta: #D97706;
+  --color-cta-dark: #B45309;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-gray-50 text-gray-900 antialiased;
+    font-family: var(--font-sans);
+  }
+  ::selection {
+    @apply bg-brand/20 text-brand-dark;
+  }
+}
+
+@layer components {
+  .category-tab {
+    @apply px-4 py-2.5 text-sm font-medium rounded-full transition-all duration-200
+      bg-white text-gray-600 border border-gray-200
+      hover:bg-brand/5 hover:text-brand hover:border-brand/30
+      active:scale-95
+      data-[active]:bg-brand data-[active]:text-white data-[active]:border-brand
+      data-[active]:shadow-lg data-[active]:shadow-brand/20;
+  }
+  .product-card {
+    @apply bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden
+      transition-all duration-300 ease-out
+      hover:shadow-lg hover:shadow-gray-200/50 hover:border-brand/20 hover:-translate-y-1;
+  }
+  .btn-affiliate {
+    @apply inline-flex items-center justify-center gap-2 w-full px-4 py-2.5
+      bg-gradient-to-r from-cta to-cta-dark text-white font-semibold rounded-lg text-xs
+      hover:from-cta-dark hover:to-cta-dark
+      active:scale-[0.97]
+      transition-all duration-200
+      hover:shadow-lg hover:shadow-cta/25;
+  }
+  .badge-price {
+    @apply absolute top-2 left-2 bg-gradient-to-r from-brand to-brand-dark text-white text-xs font-bold px-2.5 py-1 rounded-lg shadow-lg shadow-brand/20;
+  }
+  .badge-discount {
+    @apply absolute top-2 right-2 bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-md;
+  }
+  .badge-sales {
+    @apply absolute bottom-2 left-2 bg-black/60 backdrop-blur text-white text-[10px] px-2 py-0.5 rounded-md;
+  }
+  .hero-gradient {
+    @apply bg-gradient-to-br from-brand via-brand-dark to-violet-900;
+  }
+  .section-title {
+    @apply text-2xl sm:text-3xl font-bold text-gray-900;
+  }
+  .filter-chip {
+    @apply px-3 py-1.5 text-xs font-medium rounded-full border border-gray-200
+      bg-white text-gray-600 transition-all cursor-pointer whitespace-nowrap
+      hover:bg-brand/5 hover:text-brand hover:border-brand/30 active:scale-95;
+  }
+  .filter-chip[data-active="true"] {
+    @apply bg-brand text-white border-brand shadow-sm;
+  }
+  .filter-select {
+    @apply text-xs border border-gray-200 rounded-full px-3 py-1.5 bg-white
+      text-gray-600 outline-none focus:ring-2 focus:ring-brand/20
+      focus:border-brand/50 cursor-pointer;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out;
+  }
+  .animate-slide-up {
+    animation: slideUp 0.4s ease-out;
+  }
+  .animate-pulse-soft {
+    animation: pulseSoft 2s ease-in-out infinite;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseSoft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}

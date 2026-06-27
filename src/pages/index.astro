@@ -1,17 +1,469 @@
 ---
+import Layout from '../layouts/Layout.astro'
+import ProductCard from '../components/ProductCard.astro'
+import catalogo from '../data/catalogo.json'
 
+const categories = catalogo.categories
+const totalProducts = categories.reduce((acc, cat) => acc + cat.products.length, 0)
+const withPrice = categories.reduce((acc, cat) => acc + cat.products.filter(p => p.price).length, 0)
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title={`SallumC Co. & Family — ${totalProducts} Achadinhos Selecionados`}>
+  <!-- Hero -->
+  <section class="hero-gradient text-white relative overflow-hidden">
+    <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0djItSDI0di0yaDEyek0zNiAyNHYySDI0di0yaDEyek0zNiAxNHYySDI0di0yaDEyeiIvPjwvZz48L2c+PC9zdmc+')] opacity-30" />
+    <div class="max-w-7xl mx-auto px-4 py-12 sm:py-16 lg:py-20 relative">
+      <div class="text-center">
+        <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur px-4 py-1.5 rounded-full text-xs mb-4">
+          <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse-soft" />
+          SallumC Co. & Family
+        </div>
+        <h1 class="text-4xl sm:text-5xl lg:text-7xl font-extrabold mb-4 tracking-tight">
+          SallumC <span class="text-violet-200">Co. & Family</span>
+        </h1>
+        <p class="text-lg sm:text-xl text-white/80 max-w-2xl mx-auto mb-8 leading-relaxed">
+          Achadinhos selecionados com carinho para você e sua família.
+          Qualidade, praticidade e os melhores preços — tudo num só lugar.
+        </p>
+        <div class="flex flex-wrap justify-center gap-3">
+          <span class="inline-flex items-center gap-2 bg-white/10 backdrop-blur px-4 py-2 rounded-full text-sm">
+            <svg class="w-4 h-4 text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            {totalProducts} produtos
+          </span>
+          <span class="inline-flex items-center gap-2 bg-white/10 backdrop-blur px-4 py-2 rounded-full text-sm">
+            <svg class="w-4 h-4 text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+            {categories.length} categorias
+          </span>
+          <span class="inline-flex items-center gap-2 bg-white/10 backdrop-blur px-4 py-2 rounded-full text-sm">
+            <svg class="w-4 h-4 text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Entrega rápida
+          </span>
+          <span class="inline-flex items-center gap-2 bg-white/10 backdrop-blur px-4 py-2 rounded-full text-sm">
+            <svg class="w-4 h-4 text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            Compra segura
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="relative -mb-1">
+      <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full">
+        <path d="M0 60L60 52C120 44 240 28 360 24C480 20 600 28 720 32C840 36 960 36 1080 32C1200 28 1320 20 1380 16L1440 12V60H0Z" fill="rgb(249 250 251)"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- Sticky Search -->
+  <div class="sticky top-0 z-20 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 py-3">
+      <div class="flex items-center gap-3">
+        <div class="relative flex-1">
+          <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input
+            type="search"
+            id="search"
+            placeholder={`Buscar entre ${totalProducts} produtos...`}
+            autocomplete="off"
+            class="w-full pl-10 pr-10 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand/50 transition-all"
+          />
+          <button id="clear-search" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 hidden">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <a id="search-count" class="hidden text-xs text-gray-400 font-medium shrink-0 hover:text-brand" href="#"></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter & Sort Bar -->
+  <div id="filter-bar" class="bg-white border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 py-2 flex flex-wrap items-center gap-2">
+      <select id="sort-select" class="filter-select">
+        <option value="">Ordenar: Padrão</option>
+        <option value="price-asc">Menor preço</option>
+        <option value="price-desc">Maior preço</option>
+        <option value="sales-desc">Mais vendidos</option>
+        <option value="discount-desc">Maior desconto</option>
+      </select>
+      <select id="price-filter" class="filter-select">
+        <option value="">Preço: Todos</option>
+        <option value="0-50">Até R$ 50</option>
+        <option value="50-100">R$ 50 – R$ 100</option>
+        <option value="100-200">R$ 100 – R$ 200</option>
+        <option value="200+">Acima de R$ 200</option>
+      </select>
+      <button id="toggle-discount" class="filter-chip" data-active="false">Com desconto</button>
+      <button id="toggle-has-price" class="filter-chip" data-active="false">Com preço</button>
+      <button id="clear-filters" class="hidden ml-auto text-xs text-red-400 hover:text-red-600 font-medium transition-colors px-2 py-1 rounded-lg hover:bg-red-50">
+        Limpar filtros
+      </button>
+    </div>
+  </div>
+
+  <!-- Navigation tabs -->
+  <nav class="max-w-7xl mx-auto px-4 pt-4 pb-2 flex gap-2 overflow-x-auto scrollbar-hide" role="tablist" aria-label="Categorias">
+    {categories.map(cat => (
+      <a
+        href={`/${cat.slug}`}
+        role="tab"
+        class="category-tab shrink-0 whitespace-nowrap"
+      >
+        {cat.name}
+        <span class="ml-1.5 text-[10px] opacity-70">{cat.products.length}</span>
+      </a>
+    ))}
+  </nav>
+
+  <!-- All products -->
+  <main class="max-w-7xl mx-auto mt-2">
+    {categories.map(cat => (
+      <section id={`cat-${cat.slug}`} class="category-section px-4 pb-6">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-lg font-bold text-gray-900">{cat.name}</h2>
+          <a href={`/${cat.slug}`} class="text-xs text-brand hover:underline font-medium">Ver todos</a>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+          {cat.products.map(p => (
+            <ProductCard
+              name={p.name}
+              link={p.link}
+              image={p.image}
+              price={p.price}
+              discount={p.discount}
+              sales={p.sales}
+              commission={p.commission}
+            />
+          ))}
+        </div>
+      </section>
+    ))}
+
+    <!-- Filtered/search results (hidden by default) -->
+    <div id="search-results" class="hidden px-4 pb-8">
+      <div class="flex items-center justify-between mb-3">
+        <h2 id="results-title" class="text-lg font-bold text-gray-900">Resultados</h2>
+        <span id="results-count" class="text-xs text-gray-400 font-medium"></span>
+      </div>
+      <div id="results-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3"></div>
+    </div>
+
+    <!-- No results -->
+    <div id="no-results" class="hidden text-center py-16 px-4">
+      <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+      </svg>
+      <p class="text-gray-500 text-lg font-medium mb-1">Nenhum produto encontrado</p>
+      <p class="text-gray-400 text-sm">Tente buscar por outro termo</p>
+    </div>
+  </main>
+
+  <!-- How it Works -->
+  <section class="max-w-7xl mx-auto px-4 py-12">
+    <div class="bg-gradient-to-br from-brand/5 via-white to-violet-50 rounded-2xl border border-brand/10 p-8 sm:p-10">
+      <div class="text-center mb-8">
+        <h2 class="section-title mb-2">Como funciona?</h2>
+        <p class="text-gray-500">Três passos simples para aproveitar as ofertas</p>
+      </div>
+      <div class="grid sm:grid-cols-3 gap-8 text-center">
+        {[
+          { step: '1', icon: 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z', title: 'Escolha', desc: 'Navegue pelas categorias e encontre o que precisa' },
+          { step: '2', icon: 'M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122', title: 'Clique', desc: 'Clique em "Ver oferta" para ir direto ao produto na loja' },
+          { step: '3', icon: 'M5 13l4 4L19 7', title: 'Compre', desc: 'Finalize sua compra na loja parceira com total segurança' },
+        ].map(item => (
+          <div class="flex flex-col items-center">
+            <div class="w-14 h-14 bg-gradient-to-br from-brand to-brand-dark rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-brand/20 text-white text-lg font-bold">
+              {item.step}
+            </div>
+            <h3 class="font-semibold text-gray-900 mb-1">{item.title}</h3>
+            <p class="text-sm text-gray-500 max-w-xs">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust -->
+  <section class="max-w-7xl mx-auto px-4 pb-12">
+    <div class="bg-gray-900 rounded-2xl p-8 sm:p-10 text-white text-center">
+      <h2 class="text-2xl font-bold mb-2">Compra 100% segura</h2>
+      <p class="text-gray-400 max-w-xl mx-auto mb-6">
+        Você será redirecionado para a loja parceira do produto.
+        Seus dados e pagamento são protegidos pela loja escolhida.
+      </p>
+      <div class="flex flex-wrap justify-center gap-6 text-sm text-gray-400">
+        <span class="flex items-center gap-2">
+          <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          Pagamento protegido
+        </span>
+        <span class="flex items-center gap-2">
+          <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10"/></svg>
+          Entrega garantida
+        </span>
+        <span class="flex items-center gap-2">
+          <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          Suporte da loja
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- TODO: Newsletter — ativar quando pronto; não coletar emails ainda -->
+  <section class="max-w-7xl mx-auto px-4 pb-8">
+    <div class="border border-dashed border-gray-200 rounded-2xl p-6 text-center bg-white/50">
+      <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Em breve</p>
+      <p class="text-sm font-medium text-gray-500 mb-4">Receba ofertas exclusivas no seu email</p>
+      <div class="flex max-w-sm mx-auto gap-2">
+        <input
+          type="email"
+          disabled
+          placeholder="seu@email.com"
+          class="flex-1 px-4 py-2 text-sm border border-gray-200 rounded-xl bg-gray-50 text-gray-300 cursor-not-allowed"
+        />
+        <button disabled class="px-4 py-2 text-xs font-semibold bg-gray-100 text-gray-400 rounded-xl cursor-not-allowed whitespace-nowrap">
+          Em breve
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-950 text-white">
+    <div class="max-w-7xl mx-auto px-4 py-12">
+      <div class="grid sm:grid-cols-4 gap-8 mb-8">
+        <div class="sm:col-span-2">
+          <h3 class="font-bold text-lg mb-3 bg-gradient-to-r from-brand to-violet-300 bg-clip-text text-transparent">SallumC Co. & Family</h3>
+          <p class="text-gray-400 text-sm leading-relaxed max-w-sm">
+            Selecionamos os melhores achadinhos das principais lojas para você.
+            Qualidade e economia que a família aprova.
+          </p>
+          <div class="flex gap-3 mt-4">
+            <a href="https://instagram.com/sallumc.co" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center hover:bg-brand hover:scale-110 transition-all" aria-label="Instagram">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            </a>
+            <a href="https://youtube.com/@souosallum" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center hover:bg-brand hover:scale-110 transition-all" aria-label="YouTube">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            </a>
+          </div>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-3 text-sm uppercase tracking-wider text-gray-500">Categorias</h4>
+          <ul class="text-gray-400 text-sm space-y-1.5">
+            {categories.map(cat => (
+              <li>
+                <a href={`/${cat.slug}`} class="hover:text-brand transition-colors">
+                  {cat.name}
+                  <span class="text-gray-600 ml-1">({cat.products.length})</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-3 text-sm uppercase tracking-wider text-gray-500">Info</h4>
+          <ul class="text-gray-400 text-sm space-y-1.5">
+            <li>{totalProducts} produtos selecionados</li>
+            <li>{withPrice} com preço</li>
+            <li>Entregue pelas lojas parceiras</li>
+            <li>Compra 100% segura</li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-gray-800 pt-6 text-center text-gray-600 text-xs">
+        <p>&copy; 2026 SallumC Co. & Family. Todos os direitos reservados.</p>
+        <p class="mt-1">Links de afiliado — Compras geram comissão sem custo extra para você.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top -->
+  <button id="back-to-top" class="fixed bottom-6 right-6 z-30 w-12 h-12 bg-cta text-white rounded-xl shadow-lg shadow-cta/20 hover:bg-cta-dark transition-all duration-200 hover:scale-110 hidden" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">
+    <svg class="w-5 h-5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+  </button>
+
+  <script>
+    import { getMarketplaceLabel } from '../utils/marketplace'
+
+    // ── State ──────────────────────────────────────────────────────────────
+    const state = { query: '', sort: '', priceRange: '', withDiscount: false, withPrice: false }
+
+    // ── Helpers ────────────────────────────────────────────────────────────
+    function parsePrice(s) {
+      if (!s) return Infinity
+      return parseFloat(s.replace(/[R$\s.]/g, '').replace(',', '.')) || Infinity
+    }
+    function parseSales(s) {
+      if (!s) return 0
+      const m = s.match(/([\d.,]+)\s*([kKmM]?)/)
+      if (!m) return 0
+      let n = parseFloat(m[1].replace(',', '.'))
+      const suf = m[2].toLowerCase()
+      if (suf === 'k') n *= 1000
+      if (suf === 'm') n *= 1000000
+      return n
+    }
+    function parseDiscount(s) {
+      if (!s) return 0
+      return parseFloat(s.replace(/[^0-9.]/g, '')) || 0
+    }
+
+    function isActive() {
+      return !!(state.query || state.sort || state.priceRange || state.withDiscount || state.withPrice)
+    }
+
+    function getFiltered() {
+      let products = [...allProducts]
+      if (state.query) {
+        const q = state.query.toLowerCase()
+        products = products.filter(p => p.name.toLowerCase().includes(q))
+      }
+      if (state.priceRange === '200+') {
+        products = products.filter(p => { const pr = parsePrice(p.price); return pr >= 200 && pr < Infinity })
+      } else if (state.priceRange) {
+        const [min, max] = state.priceRange.split('-').map(Number)
+        products = products.filter(p => { const pr = parsePrice(p.price); return pr >= min && pr <= max })
+      }
+      if (state.withDiscount) products = products.filter(p => p.discount)
+      if (state.withPrice)    products = products.filter(p => p.price)
+      switch (state.sort) {
+        case 'price-asc':     products.sort((a, b) => parsePrice(a.price) - parsePrice(b.price)); break
+        case 'price-desc':    products.sort((a, b) => parsePrice(b.price) - parsePrice(a.price)); break
+        case 'sales-desc':    products.sort((a, b) => parseSales(b.sales) - parseSales(a.sales)); break
+        case 'discount-desc': products.sort((a, b) => parseDiscount(b.discount) - parseDiscount(a.discount)); break
+      }
+      return products
+    }
+
+    // ── Card builder (client-side for dynamic results) ─────────────────────
+    function buildProductCard(p) {
+      const img = p.image
+        ? `<img src="${p.image}" alt="${p.name}" loading="lazy" onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22400%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23d1d5db%22 stroke-width=%221%22%3E%3Cpath d=%22M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10%22/%3E%3C/svg%3E';this.style.objectFit='none';this.style.padding='30%'" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />`
+        : `<div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100"><svg class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10"/></svg></div>`
+      const priceBadge = p.price
+        ? `<span class="badge-price">${p.price}</span>`
+        : `<span class="absolute top-2 left-2 bg-gray-800/60 backdrop-blur text-white text-[10px] font-medium px-2 py-1 rounded-lg">Ver preço</span>`
+      const discountBadge = p.discount && !p.commission
+        ? `<span class="badge-discount">-${p.discount.replace('%', '')}%</span>` : ''
+      const commBadge = p.commission && p.price
+        ? `<span class="absolute top-2 right-2 bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow">${p.commission}</span>` : ''
+      const commDiscount = p.discount && p.commission
+        ? `<span class="absolute top-9 right-2 bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-md">-${p.discount.replace('%', '')}%</span>` : ''
+      const salesBadge = p.sales && !p.price
+        ? `<span class="badge-sales">${p.sales}</span>` : ''
+      const priceRow = p.price
+        ? `<div class="flex items-center gap-2"><span class="text-brand font-bold text-base">${p.price}</span>${p.discount ? `<span class="text-green-600 text-xs font-semibold">-${p.discount.replace('%','').replace('-','').trim()}%</span>` : ''}</div>${p.sales ? `<p class="text-gray-400 text-[11px]">${p.sales}</p>` : ''}` : ''
+      const cta = getMarketplaceLabel(p.link)
+      return `<article class="product-card group">
+        <div class="aspect-square relative overflow-hidden bg-gray-100">
+          ${img}${priceBadge}${discountBadge}${commBadge}${commDiscount}${salesBadge}
+          <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div class="absolute inset-0 bg-brand/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        </div>
+        <div class="p-3 space-y-2">
+          <h3 class="font-medium text-gray-900 text-sm line-clamp-2 leading-snug min-h-[2.5em]">${p.name}</h3>
+          <div class="space-y-0.5">${priceRow}</div>
+          <a href="${p.link}" target="_blank" rel="noopener noreferrer" class="btn-affiliate">
+            <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            ${cta}
+          </a>
+        </div>
+      </article>`
+    }
+
+    // ── DOM refs ───────────────────────────────────────────────────────────
+    const allProducts = JSON.parse(document.getElementById('product-data')?.textContent || '[]')
+    const searchInput    = document.getElementById('search')
+    const clearSearchBtn = document.getElementById('clear-search')
+    const searchResults  = document.getElementById('search-results')
+    const resultsGrid    = document.getElementById('results-grid')
+    const resultsTitle   = document.getElementById('results-title')
+    const noResults      = document.getElementById('no-results')
+    const resultsCount   = document.getElementById('results-count')
+    const categorySections = document.querySelectorAll('.category-section')
+    const searchCount    = document.getElementById('search-count')
+    const sortSelect     = document.getElementById('sort-select')
+    const priceFilter    = document.getElementById('price-filter')
+    const toggleDiscount = document.getElementById('toggle-discount')
+    const toggleHasPrice = document.getElementById('toggle-has-price')
+    const clearFiltersBtn = document.getElementById('clear-filters')
+
+    // ── Render ─────────────────────────────────────────────────────────────
+    function render() {
+      if (isActive()) {
+        const products = getFiltered()
+        resultsGrid.innerHTML = products.map(buildProductCard).join('')
+        searchResults.classList.remove('hidden')
+        noResults.classList.toggle('hidden', products.length > 0)
+        const label = products.length
+        resultsCount.textContent = `${label} produto${label !== 1 ? 's' : ''}`
+        resultsTitle.textContent = state.query ? 'Resultados da busca' : 'Produtos filtrados'
+        categorySections.forEach(s => s.hidden = true)
+        searchCount.classList.remove('hidden')
+        searchCount.textContent = `${label} resultado${label !== 1 ? 's' : ''}`
+        searchCount.href = '#search-results'
+        clearSearchBtn.classList.toggle('hidden', !state.query)
+        clearFiltersBtn.classList.toggle('hidden', !(state.sort || state.priceRange || state.withDiscount || state.withPrice))
+      } else {
+        searchResults.classList.add('hidden')
+        noResults.classList.add('hidden')
+        resultsGrid.innerHTML = ''
+        categorySections.forEach(s => s.hidden = false)
+        searchCount.classList.add('hidden')
+        clearSearchBtn.classList.add('hidden')
+        clearFiltersBtn.classList.add('hidden')
+      }
+    }
+
+    // ── Wire up controls ───────────────────────────────────────────────────
+    let debounceTimer
+    searchInput?.addEventListener('input', () => {
+      clearTimeout(debounceTimer)
+      debounceTimer = setTimeout(() => {
+        state.query = searchInput.value.toLowerCase().trim()
+        render()
+      }, 150)
+    })
+
+    clearSearchBtn?.addEventListener('click', () => {
+      searchInput.value = ''
+      state.query = ''
+      render()
+      searchInput.focus()
+    })
+
+    sortSelect?.addEventListener('change', () => {
+      state.sort = sortSelect.value
+      render()
+    })
+
+    priceFilter?.addEventListener('change', () => {
+      state.priceRange = priceFilter.value
+      render()
+    })
+
+    function toggleChip(btn, key) {
+      const next = btn.dataset.active !== 'true'
+      btn.dataset.active = String(next)
+      state[key] = next
+      render()
+    }
+
+    toggleDiscount?.addEventListener('click', () => toggleChip(toggleDiscount, 'withDiscount'))
+    toggleHasPrice?.addEventListener('click', () => toggleChip(toggleHasPrice, 'withPrice'))
+
+    clearFiltersBtn?.addEventListener('click', () => {
+      state.sort = ''; state.priceRange = ''; state.withDiscount = false; state.withPrice = false
+      sortSelect.value = ''; priceFilter.value = ''
+      toggleDiscount.dataset.active = 'false'
+      toggleHasPrice.dataset.active = 'false'
+      render()
+    })
+
+    const backToTop = document.getElementById('back-to-top')
+    if (backToTop) {
+      window.addEventListener('scroll', () => {
+        backToTop.classList.toggle('hidden', window.scrollY < 400)
+      })
+    }
+  </script>
+
+  <script type="application/json" id="product-data">{JSON.stringify(categories.flatMap(c => c.products.map(p => ({ name: p.name, link: p.link, image: p.image, price: p.price, discount: p.discount, sales: p.sales, commission: p.commission }))))}</script>
+</Layout>

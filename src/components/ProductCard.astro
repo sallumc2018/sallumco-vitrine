@@ -1,0 +1,92 @@
+---
+import { getMarketplaceLabel, parsePriceVal, parseSalesVal, parseDiscountVal } from '../utils/marketplace'
+
+export interface Props {
+  name: string
+  link: string
+  image?: string
+  price?: string | null
+  discount?: string | null
+  sales?: string | null
+  commission?: string | null
+}
+const { name, link, image, price, discount, sales, commission } = Astro.props
+
+const ctaLabel = getMarketplaceLabel(link)
+const img = image || null
+---
+<article
+  class="product-card group"
+  data-price={parsePriceVal(price)}
+  data-sales={parseSalesVal(sales)}
+  data-discount={parseDiscountVal(discount)}
+>
+  <div class="aspect-square relative overflow-hidden bg-gray-100">
+    {img ? (
+      <img
+        src={img}
+        alt={name}
+        loading="lazy"
+        onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22400%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23d1d5db%22 stroke-width=%221%22%3E%3Cpath d=%22M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10%22/%3E%3C/svg%3E';this.style.objectFit='none';this.style.padding='30%'"
+        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+      />
+    ) : (
+      <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
+        <svg class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10"/>
+        </svg>
+      </div>
+    )}
+    {price ? (
+      <span class="badge-price">{price}</span>
+    ) : (
+      <span class="absolute top-2 left-2 bg-gray-800/60 backdrop-blur text-white text-[10px] font-medium px-2 py-1 rounded-lg">
+        Ver preço
+      </span>
+    )}
+    {discount && !commission && (
+      <span class="badge-discount">-{discount.replace('%', '')}%</span>
+    )}
+    {commission && price && (
+      <span class="absolute top-2 right-2 bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow">
+        {commission}
+      </span>
+    )}
+    {discount && commission && (
+      <span class="absolute top-9 right-2 bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-md">
+        -{discount.replace('%', '')}%
+      </span>
+    )}
+    {sales && !price && (
+      <span class="badge-sales">{sales}</span>
+    )}
+    <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+    <div class="absolute inset-0 bg-brand/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+  </div>
+  <div class="p-3 space-y-2">
+    <h3 class="font-medium text-gray-900 text-sm line-clamp-2 leading-snug min-h-[2.5em]">
+      {name}
+    </h3>
+    {price && (
+      <div class="space-y-0.5">
+        <div class="flex items-center gap-2">
+          <span class="text-brand font-bold text-base">{price}</span>
+          {discount && <span class="text-green-600 text-xs font-semibold">-{discount.replace('%','').replace('-','').trim()}%</span>}
+        </div>
+        {sales && <p class="text-gray-400 text-[11px] leading-tight">{sales}</p>}
+      </div>
+    )}
+    <a
+      href={link}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="btn-affiliate"
+    >
+      <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+      </svg>
+      {ctaLabel}
+    </a>
+  </div>
+</article>
