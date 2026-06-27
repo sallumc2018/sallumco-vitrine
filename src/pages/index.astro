@@ -75,17 +75,20 @@ const withPrice = categories.reduce((acc, cat) => acc + cat.products.filter(p =>
   </div>
 
   <!-- Filter & Sort Bar -->
-  <div id="filter-bar" class="bg-white border-b border-gray-100">
-    <div class="max-w-7xl mx-auto px-4 py-2 flex flex-wrap items-center gap-2">
+  <div id="filter-bar" class="bg-white border-b border-gray-100 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 py-2.5 flex flex-wrap items-center gap-2">
+      <span class="text-[11px] font-semibold text-gray-400 uppercase tracking-wide mr-1 shrink-0">Ordenar</span>
       <select id="sort-select" class="filter-select">
-        <option value="">Ordenar: Padrão</option>
+        <option value="">Padrão</option>
         <option value="price-asc">Menor preço</option>
         <option value="price-desc">Maior preço</option>
         <option value="sales-desc">Mais vendidos</option>
         <option value="discount-desc">Maior desconto</option>
       </select>
+      <span class="text-gray-200 mx-1 shrink-0">|</span>
+      <span class="text-[11px] font-semibold text-gray-400 uppercase tracking-wide mr-1 shrink-0">Filtrar</span>
       <select id="price-filter" class="filter-select">
-        <option value="">Preço: Todos</option>
+        <option value="">Qualquer preço</option>
         <option value="0-50">Até R$ 50</option>
         <option value="50-100">R$ 50 – R$ 100</option>
         <option value="100-200">R$ 100 – R$ 200</option>
@@ -94,23 +97,26 @@ const withPrice = categories.reduce((acc, cat) => acc + cat.products.filter(p =>
       <button id="toggle-discount" class="filter-chip" data-active="false">Com desconto</button>
       <button id="toggle-has-price" class="filter-chip" data-active="false">Com preço</button>
       <button id="clear-filters" class="hidden ml-auto text-xs text-red-400 hover:text-red-600 font-medium transition-colors px-2 py-1 rounded-lg hover:bg-red-50">
-        Limpar filtros
+        ✕ Limpar filtros
       </button>
     </div>
   </div>
 
   <!-- Navigation tabs -->
-  <nav class="max-w-7xl mx-auto px-4 pt-4 pb-2 flex gap-2 overflow-x-auto scrollbar-hide" role="tablist" aria-label="Categorias">
-    {categories.map(cat => (
-      <a
-        href={`/${cat.slug}`}
-        role="tab"
-        class="category-tab shrink-0 whitespace-nowrap"
-      >
-        {cat.name}
-        <span class="ml-1.5 text-[10px] opacity-70">{cat.products.length}</span>
-      </a>
-    ))}
+  <nav class="max-w-7xl mx-auto pt-4 pb-2" role="tablist" aria-label="Categorias">
+    <div class="flex gap-2 overflow-x-auto scrollbar-hide px-4">
+      {categories.map(cat => (
+        <a
+          href={`/${cat.slug}`}
+          role="tab"
+          class="category-tab shrink-0 whitespace-nowrap"
+        >
+          {cat.name}
+          <span class="ml-1.5 text-[10px] opacity-70">{cat.products.length}</span>
+        </a>
+      ))}
+      <span class="shrink-0 w-4 block" aria-hidden="true"></span>
+    </div>
   </nav>
 
   <!-- All products -->
@@ -305,8 +311,37 @@ const withPrice = categories.reduce((acc, cat) => acc + cat.products.filter(p =>
       return parseFloat(s.replace(/[^0-9.]/g, '')) || 0
     }
 
+    // isFilterActive: apenas filtros (não sort) → ativa a view plana
+    function isFilterActive() {
+      return !!(state.query || state.priceRange || state.withDiscount || state.withPrice)
+    }
     function isActive() {
-      return !!(state.query || state.sort || state.priceRange || state.withDiscount || state.withPrice)
+      return isFilterActive() || !!state.sort
+    }
+
+    // Sort dentro das seções de categoria (sem mudar para view plana)
+    function sortCategorySections() {
+      categorySections.forEach(section => {
+        const grid = section.querySelector('.grid')
+        if (!grid) return
+        const cards = Array.from(grid.querySelectorAll('.product-card'))
+        cards.sort((a, b) => {
+          const pA = parseFloat(a.dataset.price) || Infinity
+          const pB = parseFloat(b.dataset.price) || Infinity
+          const sA = parseFloat(a.dataset.sales)  || 0
+          const sB = parseFloat(b.dataset.sales)  || 0
+          const dA = parseFloat(a.dataset.discount) || 0
+          const dB = parseFloat(b.dataset.discount) || 0
+          switch (state.sort) {
+            case 'price-asc':     return pA - pB
+            case 'price-desc':    return pB - pA
+            case 'sales-desc':    return sB - sA
+            case 'discount-desc': return dB - dA
+            default: return 0
+          }
+        })
+        cards.forEach(c => grid.appendChild(c))
+      })
     }
 
     function getFiltered() {
@@ -387,7 +422,10 @@ const withPrice = categories.reduce((acc, cat) => acc + cat.products.filter(p =>
 
     // ── Render ─────────────────────────────────────────────────────────────
     function render() {
-      if (isActive()) {
+      const filterActive = isFilterActive()
+
+      if (filterActive) {
+        // View plana: busca + filtros
         const products = getFiltered()
         resultsGrid.innerHTML = products.map(buildProductCard).join('')
         searchResults.classList.remove('hidden')
@@ -400,15 +438,17 @@ const withPrice = categories.reduce((acc, cat) => acc + cat.products.filter(p =>
         searchCount.textContent = `${label} resultado${label !== 1 ? 's' : ''}`
         searchCount.href = '#search-results'
         clearSearchBtn.classList.toggle('hidden', !state.query)
-        clearFiltersBtn.classList.toggle('hidden', !(state.sort || state.priceRange || state.withDiscount || state.withPrice))
+        clearFiltersBtn.classList.remove('hidden')
       } else {
+        // View por categorias (com ou sem ordenação)
         searchResults.classList.add('hidden')
         noResults.classList.add('hidden')
         resultsGrid.innerHTML = ''
         categorySections.forEach(s => s.hidden = false)
         searchCount.classList.add('hidden')
         clearSearchBtn.classList.add('hidden')
-        clearFiltersBtn.classList.add('hidden')
+        clearFiltersBtn.classList.toggle('hidden', !state.sort)
+        sortCategorySections()
       }
     }
 
@@ -451,9 +491,10 @@ const withPrice = categories.reduce((acc, cat) => acc + cat.products.filter(p =>
 
     clearFiltersBtn?.addEventListener('click', () => {
       state.sort = ''; state.priceRange = ''; state.withDiscount = false; state.withPrice = false
-      sortSelect.value = ''; priceFilter.value = ''
-      toggleDiscount.dataset.active = 'false'
-      toggleHasPrice.dataset.active = 'false'
+      if (sortSelect) sortSelect.value = ''
+      if (priceFilter) priceFilter.value = ''
+      if (toggleDiscount) toggleDiscount.dataset.active = 'false'
+      if (toggleHasPrice) toggleHasPrice.dataset.active = 'false'
       render()
     })
 
