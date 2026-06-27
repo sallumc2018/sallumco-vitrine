@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">SallumC Co. &amp; Family</title>
+  <desc id="desc">Achadinhos selecionados em lojas parceiras.</desc>
+  <rect width="1200" height="630" fill="#111827"/>
+  <rect x="72" y="72" width="1056" height="486" rx="32" fill="#ffffff"/>
+  <circle cx="136" cy="136" r="28" fill="#7C3AED"/>
+  <text x="188" y="146" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="700" fill="#111827">SallumC Co. &amp; Family</text>
+  <text x="136" y="288" font-family="Inter, Arial, sans-serif" font-size="64" font-weight="800" fill="#111827">Achadinhos selecionados</text>
+  <text x="136" y="360" font-family="Inter, Arial, sans-serif" font-size="32" font-weight="500" fill="#4B5563">Casa, rotina, família e presentes em lojas parceiras.</text>
+  <rect x="136" y="430" width="302" height="64" rx="16" fill="#D97706"/>
+  <text x="172" y="472" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="700" fill="#ffffff">Ver ofertas</text>
+</svg>

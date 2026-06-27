@@ -14,7 +14,11 @@ const { category } = Astro.props
 const count = category.products.length
 ---
 
-<Layout title={`${category.name} — SallumC Co. & Family`}>
+<Layout
+  title={`${category.name} — SallumC Co. & Family`}
+  description={`Produtos selecionados em ${category.name} pela SallumC Co. & Family, com links para lojas parceiras e compra finalizada no marketplace.`}
+  canonicalPath={`/${category.slug}`}
+>
   <nav class="bg-white border-b border-gray-100">
     <div class="max-w-7xl mx-auto px-4 py-3 flex items-center gap-4 text-sm">
       <a href="/" class="text-brand hover:underline font-medium">&larr; Voltar</a>
@@ -53,7 +57,6 @@ const count = category.products.length
           price={p.price}
           discount={p.discount}
           sales={p.sales}
-          commission={p.commission}
         />
       ))}
     </div>
@@ -63,7 +66,7 @@ const count = category.products.length
 
   <footer class="bg-gray-950 text-white mt-8">
     <div class="max-w-7xl mx-auto px-4 py-8 text-center text-gray-600 text-xs">
-      <p>&copy; 2026 SallumC Co. & Family. Links de afiliado.</p>
+      <p>&copy; 2026 SallumC Co. & Family. Alguns links podem gerar comissão sem custo extra para você.</p>
       <a href="/" class="text-brand hover:underline mt-1 inline-block">Voltar ao início</a>
     </div>
   </footer>

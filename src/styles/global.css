@@ -71,6 +71,15 @@
       text-gray-600 outline-none focus:ring-2 focus:ring-brand/20
       focus:border-brand/50 cursor-pointer;
   }
+  .legal-page {
+    @apply max-w-3xl mx-auto px-4 py-10 sm:py-14;
+  }
+  .legal-page h1 {
+    @apply mt-6 mb-5 text-3xl sm:text-4xl font-bold text-gray-950 tracking-tight;
+  }
+  .legal-page p {
+    @apply text-gray-600 leading-relaxed mb-4;
+  }
 }
 
 @layer utilities {

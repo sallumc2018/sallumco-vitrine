@@ -1,0 +1,43 @@
+---
+import '../styles/global.css'
+export interface Props {
+  title: string
+  description?: string
+  canonicalPath?: string
+}
+const {
+  title,
+  description = 'SallumC Co. & Family seleciona achadinhos de lojas parceiras com foco em utilidade, preço e praticidade para casa, família e rotina.',
+  canonicalPath = Astro.url.pathname,
+} = Astro.props
+const siteUrl = 'https://sallumco-vitrine.pages.dev'
+const canonicalUrl = new URL(canonicalPath, siteUrl).toString()
+const ogImage = new URL('/og-image.svg', siteUrl).toString()
+---
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#7C3AED" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content="pt_BR" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+    <title>{title}</title>
+  </head>
+  <body class="min-h-screen">
+    <slot />
+  </body>
+</html>
