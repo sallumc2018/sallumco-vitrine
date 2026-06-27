@@ -8,7 +8,11 @@ const totalProducts = categories.reduce((acc, cat) => acc + cat.products.length,
 const withPrice = categories.reduce((acc, cat) => acc + cat.products.filter(p => p.price).length, 0)
 ---
 
-<Layout title={`SallumC Co. & Family — ${totalProducts} Achadinhos Selecionados`}>
+<Layout
+  title={`SallumC Co. & Family — ${totalProducts} Achadinhos Selecionados`}
+  description="Achadinhos selecionados pela SallumC Co. & Family em lojas parceiras. Curadoria prática para casa, família, presentes e rotina."
+  canonicalPath="/"
+>
   <!-- Hero -->
   <section class="hero-gradient text-white relative overflow-hidden">
     <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0djItSDI0di0yaDEyek0zNiAyNHYySDI0di0yaDEyek0zNiAxNHYySDI0di0yaDEyeiIvPjwvZz48L2c+PC9zdmc+')] opacity-30" />
@@ -40,7 +44,7 @@ const withPrice = categories.reduce((acc, cat) => acc + cat.products.filter(p =>
           </span>
           <span class="inline-flex items-center gap-2 bg-white/10 backdrop-blur px-4 py-2 rounded-full text-sm">
             <svg class="w-4 h-4 text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-            Compra segura
+            Compra na loja parceira
           </span>
         </div>
       </div>
@@ -80,6 +84,8 @@ const withPrice = categories.reduce((acc, cat) => acc + cat.products.filter(p =>
       <span class="text-[11px] font-semibold text-gray-400 uppercase tracking-wide mr-1 shrink-0">Ordenar</span>
       <select id="sort-select" class="filter-select">
         <option value="">Padrão</option>
+        <option value="name-asc">Nome A-Z</option>
+        <option value="name-desc">Nome Z-A</option>
         <option value="price-asc">Menor preço</option>
         <option value="price-desc">Maior preço</option>
         <option value="sales-desc">Mais vendidos</option>
@@ -103,21 +109,22 @@ const withPrice = categories.reduce((acc, cat) => acc + cat.products.filter(p =>
   </div>
 
   <!-- Navigation tabs -->
-  <nav class="max-w-7xl mx-auto pt-4 pb-2" role="tablist" aria-label="Categorias">
-    <div class="flex gap-2 overflow-x-auto scrollbar-hide px-4">
-      {categories.map(cat => (
-        <a
-          href={`/${cat.slug}`}
-          role="tab"
-          class="category-tab shrink-0 whitespace-nowrap"
-        >
-          {cat.name}
-          <span class="ml-1.5 text-[10px] opacity-70">{cat.products.length}</span>
-        </a>
-      ))}
-      <span class="shrink-0 w-4 block" aria-hidden="true"></span>
-    </div>
-  </nav>
+  <div class="max-w-7xl mx-auto">
+    <nav class="pt-4 pb-2 overflow-x-auto scrollbar-hide" role="tablist" aria-label="Categorias">
+      <div class="flex gap-2 px-4" style="min-width: max-content">
+        {categories.map(cat => (
+          <a
+            href={`/${cat.slug}`}
+            role="tab"
+            class="category-tab shrink-0 whitespace-nowrap"
+          >
+            {cat.name}
+            <span class="ml-1.5 text-[10px] opacity-70">{cat.products.length}</span>
+          </a>
+        ))}
+      </div>
+    </nav>
+  </div>
 
   <!-- All products -->
   <main class="max-w-7xl mx-auto mt-2">
@@ -136,7 +143,6 @@ const withPrice = categories.reduce((acc, cat) => acc + cat.products.filter(p =>
               price={p.price}
               discount={p.discount}
               sales={p.sales}
-              commission={p.commission}
             />
           ))}
         </div>
@@ -190,44 +196,38 @@ const withPrice = categories.reduce((acc, cat) => acc + cat.products.filter(p =>
   <!-- Trust -->
   <section class="max-w-7xl mx-auto px-4 pb-12">
     <div class="bg-gray-900 rounded-2xl p-8 sm:p-10 text-white text-center">
-      <h2 class="text-2xl font-bold mb-2">Compra 100% segura</h2>
+      <h2 class="text-2xl font-bold mb-2">Compra finalizada na loja parceira</h2>
       <p class="text-gray-400 max-w-xl mx-auto mb-6">
         Você será redirecionado para a loja parceira do produto.
-        Seus dados e pagamento são protegidos pela loja escolhida.
+        Preço, estoque, prazo, pagamento, entrega e suporte são definidos pela loja no momento da compra.
       </p>
       <div class="flex flex-wrap justify-center gap-6 text-sm text-gray-400">
         <span class="flex items-center gap-2">
           <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-          Pagamento protegido
+          Pagamento no marketplace
         </span>
         <span class="flex items-center gap-2">
           <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10"/></svg>
-          Entrega garantida
+          Entrega pela loja
         </span>
         <span class="flex items-center gap-2">
           <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-          Suporte da loja
+          Suporte no canal oficial
         </span>
       </div>
     </div>
   </section>
 
-  <!-- TODO: Newsletter — ativar quando pronto; não coletar emails ainda -->
+  <!-- Curadoria -->
   <section class="max-w-7xl mx-auto px-4 pb-8">
-    <div class="border border-dashed border-gray-200 rounded-2xl p-6 text-center bg-white/50">
-      <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Em breve</p>
-      <p class="text-sm font-medium text-gray-500 mb-4">Receba ofertas exclusivas no seu email</p>
-      <div class="flex max-w-sm mx-auto gap-2">
-        <input
-          type="email"
-          disabled
-          placeholder="seu@email.com"
-          class="flex-1 px-4 py-2 text-sm border border-gray-200 rounded-xl bg-gray-50 text-gray-300 cursor-not-allowed"
-        />
-        <button disabled class="px-4 py-2 text-xs font-semibold bg-gray-100 text-gray-400 rounded-xl cursor-not-allowed whitespace-nowrap">
-          Em breve
-        </button>
-      </div>
+    <div class="bg-white border border-gray-100 rounded-2xl p-6 sm:p-8">
+      <h2 class="section-title mb-3">Curadoria simples, sem complicar</h2>
+      <p class="text-gray-500 text-sm leading-relaxed max-w-3xl">
+        A seleção prioriza produtos úteis para rotina, casa, família e presentes.
+        Alguns links são de afiliado e podem gerar comissão para a SallumC Co. & Family,
+        sem custo extra para você. O valor da compra, disponibilidade e condições finais
+        devem sempre ser conferidos na loja parceira antes do pagamento.
+      </p>
     </div>
   </section>
 
@@ -269,13 +269,17 @@ const withPrice = categories.reduce((acc, cat) => acc + cat.products.filter(p =>
             <li>{totalProducts} produtos selecionados</li>
             <li>{withPrice} com preço</li>
             <li>Entregue pelas lojas parceiras</li>
-            <li>Compra 100% segura</li>
+            <li>Compra finalizada no marketplace</li>
+            <li><a href="/sobre" class="hover:text-brand transition-colors">Sobre</a></li>
+            <li><a href="/privacidade" class="hover:text-brand transition-colors">Privacidade</a></li>
+            <li><a href="/termos" class="hover:text-brand transition-colors">Termos</a></li>
+            <li><a href="/contato" class="hover:text-brand transition-colors">Contato</a></li>
           </ul>
         </div>
       </div>
       <div class="border-t border-gray-800 pt-6 text-center text-gray-600 text-xs">
         <p>&copy; 2026 SallumC Co. & Family. Todos os direitos reservados.</p>
-        <p class="mt-1">Links de afiliado — Compras geram comissão sem custo extra para você.</p>
+        <p class="mt-1">Alguns links são de afiliado e podem gerar comissão sem custo extra para você.</p>
       </div>
     </div>
   </footer>
@@ -321,6 +325,7 @@ const withPrice = categories.reduce((acc, cat) => acc + cat.products.filter(p =>
 
     // Sort dentro das seções de categoria (sem mudar para view plana)
     function sortCategorySections() {
+      if (!state.sort) return
       categorySections.forEach(section => {
         const grid = section.querySelector('.grid')
         if (!grid) return
@@ -332,7 +337,11 @@ const withPrice = categories.reduce((acc, cat) => acc + cat.products.filter(p =>
           const sB = parseFloat(b.dataset.sales)  || 0
           const dA = parseFloat(a.dataset.discount) || 0
           const dB = parseFloat(b.dataset.discount) || 0
+          const nA = (a.dataset.name || '').toLowerCase()
+          const nB = (b.dataset.name || '').toLowerCase()
           switch (state.sort) {
+            case 'name-asc':      return nA.localeCompare(nB, 'pt-BR')
+            case 'name-desc':     return nB.localeCompare(nA, 'pt-BR')
             case 'price-asc':     return pA - pB
             case 'price-desc':    return pB - pA
             case 'sales-desc':    return sB - sA
@@ -359,6 +368,8 @@ const withPrice = categories.reduce((acc, cat) => acc + cat.products.filter(p =>
       if (state.withDiscount) products = products.filter(p => p.discount)
       if (state.withPrice)    products = products.filter(p => p.price)
       switch (state.sort) {
+        case 'name-asc':      products.sort((a, b) => (a.name || '').localeCompare(b.name || '', 'pt-BR')); break
+        case 'name-desc':     products.sort((a, b) => (b.name || '').localeCompare(a.name || '', 'pt-BR')); break
         case 'price-asc':     products.sort((a, b) => parsePrice(a.price) - parsePrice(b.price)); break
         case 'price-desc':    products.sort((a, b) => parsePrice(b.price) - parsePrice(a.price)); break
         case 'sales-desc':    products.sort((a, b) => parseSales(b.sales) - parseSales(a.sales)); break
@@ -368,34 +379,50 @@ const withPrice = categories.reduce((acc, cat) => acc + cat.products.filter(p =>
     }
 
     // ── Card builder (client-side for dynamic results) ─────────────────────
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, char => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+      }[char]))
+    }
+
+    function escapeAttr(value) {
+      return escapeHtml(value).replace(/`/g, '&#96;')
+    }
+
     function buildProductCard(p) {
+      const name = escapeHtml(p.name)
+      const link = escapeAttr(p.link)
+      const image = p.image ? escapeAttr(p.image) : ''
+      const price = p.price ? escapeHtml(p.price) : ''
+      const discount = p.discount ? escapeHtml(p.discount) : ''
+      const sales = p.sales ? escapeHtml(p.sales) : ''
       const img = p.image
-        ? `<img src="${p.image}" alt="${p.name}" loading="lazy" onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22400%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23d1d5db%22 stroke-width=%221%22%3E%3Cpath d=%22M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10%22/%3E%3C/svg%3E';this.style.objectFit='none';this.style.padding='30%'" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />`
+        ? `<img src="${image}" alt="${name}" loading="lazy" onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22400%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23d1d5db%22 stroke-width=%221%22%3E%3Cpath d=%22M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10%22/%3E%3C/svg%3E';this.style.objectFit='none';this.style.padding='30%'" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />`
         : `<div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100"><svg class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10"/></svg></div>`
       const priceBadge = p.price
-        ? `<span class="badge-price">${p.price}</span>`
+        ? `<span class="badge-price">${price}</span>`
         : `<span class="absolute top-2 left-2 bg-gray-800/60 backdrop-blur text-white text-[10px] font-medium px-2 py-1 rounded-lg">Ver preço</span>`
-      const discountBadge = p.discount && !p.commission
-        ? `<span class="badge-discount">-${p.discount.replace('%', '')}%</span>` : ''
-      const commBadge = p.commission && p.price
-        ? `<span class="absolute top-2 right-2 bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow">${p.commission}</span>` : ''
-      const commDiscount = p.discount && p.commission
-        ? `<span class="absolute top-9 right-2 bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-md">-${p.discount.replace('%', '')}%</span>` : ''
+      const discountBadge = p.discount
+        ? `<span class="badge-discount">-${discount.replace('%', '')}%</span>` : ''
       const salesBadge = p.sales && !p.price
-        ? `<span class="badge-sales">${p.sales}</span>` : ''
+        ? `<span class="badge-sales">${sales}</span>` : ''
       const priceRow = p.price
-        ? `<div class="flex items-center gap-2"><span class="text-brand font-bold text-base">${p.price}</span>${p.discount ? `<span class="text-green-600 text-xs font-semibold">-${p.discount.replace('%','').replace('-','').trim()}%</span>` : ''}</div>${p.sales ? `<p class="text-gray-400 text-[11px]">${p.sales}</p>` : ''}` : ''
+        ? `<div class="flex items-center gap-2"><span class="text-brand font-bold text-base">${price}</span>${p.discount ? `<span class="text-green-600 text-xs font-semibold">-${discount.replace('%','').replace('-','').trim()}%</span>` : ''}</div>${p.sales ? `<p class="text-gray-400 text-[11px]">${sales}</p>` : ''}` : ''
       const cta = getMarketplaceLabel(p.link)
       return `<article class="product-card group">
         <div class="aspect-square relative overflow-hidden bg-gray-100">
-          ${img}${priceBadge}${discountBadge}${commBadge}${commDiscount}${salesBadge}
+          ${img}${priceBadge}${discountBadge}${salesBadge}
           <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           <div class="absolute inset-0 bg-brand/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         </div>
         <div class="p-3 space-y-2">
-          <h3 class="font-medium text-gray-900 text-sm line-clamp-2 leading-snug min-h-[2.5em]">${p.name}</h3>
+          <h3 class="font-medium text-gray-900 text-sm line-clamp-2 leading-snug min-h-[2.5em]">${name}</h3>
           <div class="space-y-0.5">${priceRow}</div>
-          <a href="${p.link}" target="_blank" rel="noopener noreferrer" class="btn-affiliate">
+          <a href="${link}" target="_blank" rel="noopener noreferrer" class="btn-affiliate">
             <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
             ${cta}
           </a>
@@ -506,5 +533,5 @@ const withPrice = categories.reduce((acc, cat) => acc + cat.products.filter(p =>
     }
   </script>
 
-  <script type="application/json" id="product-data">{JSON.stringify(categories.flatMap(c => c.products.map(p => ({ name: p.name, link: p.link, image: p.image, price: p.price, discount: p.discount, sales: p.sales, commission: p.commission }))))}</script>
+  <script type="application/json" id="product-data">{JSON.stringify(categories.flatMap(c => c.products.map(p => ({ name: p.name, link: p.link, image: p.image, price: p.price, discount: p.discount, sales: p.sales }))))}</script>
 </Layout>
