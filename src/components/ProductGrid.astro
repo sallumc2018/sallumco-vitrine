@@ -1,0 +1,30 @@
+---
+import ProductCard from './ProductCard.astro'
+
+export interface Props {
+  products: Array<{
+    name: string
+    link: string
+    image?: string
+    price?: string | null
+    discount?: string | null
+    sales?: string | null
+  }>
+  category: string
+}
+const { products, category } = Astro.props
+---
+<section id={`panel-${category}`} role="tabpanel" aria-labelledby={`tab-${category}`} class="hidden animate-fade-in">
+  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 px-4 pb-8">
+    {products.map(product => (
+      <ProductCard
+        name={product.name}
+        link={product.link}
+        image={product.image}
+        price={product.price}
+        discount={product.discount}
+        sales={product.sales}
+      />
+    ))}
+  </div>
+</section>

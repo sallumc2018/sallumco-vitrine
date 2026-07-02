@@ -1,0 +1,40 @@
+---
+export interface Props {
+  categories: Array<{ name: string; count: number }>
+  active: string
+}
+const { categories, active } = Astro.props
+---
+<nav class="flex gap-2 overflow-x-auto scrollbar-hide pb-2 px-4" role="tablist" aria-label="Categorias de produtos">
+  {categories.map(cat => (
+    <button
+      role="tab"
+      aria-selected={cat.name === active}
+      aria-controls={`panel-${cat.name}`}
+      id={`tab-${cat.name}`}
+      class="category-tab shrink-0"
+      data-active={cat.name === active}
+      onclick={() => window.dispatchEvent(new CustomEvent('category-change', { detail: cat.name }))}
+    >
+      {cat.name}
+      <span class="ml-1.5 text-[10px] opacity-70">{cat.count}</span>
+    </button>
+  ))}
+</nav>
+
+<script>
+  document.addEventListener('category-change', (e: CustomEvent<string>) => {
+    const cat = e.detail
+    document.querySelectorAll('[role="tabpanel"]').forEach(p => (p as HTMLElement).hidden = true)
+    const panel = document.getElementById(`panel-${cat}`)
+    if (panel) (panel as HTMLElement).hidden = false
+    document.querySelectorAll('[role="tab"]').forEach(b => {
+      const isActive = b.getAttribute('aria-controls') === `panel-${cat}`
+      b.dataset.active = isActive ? 'true' : 'false'
+      b.setAttribute('aria-selected', isActive ? 'true' : 'false')
+    })
+    // Scroll tab into view
+    const activeTab = document.querySelector(`[aria-controls="panel-${cat}"]`)
+    activeTab?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' })
+  })
+</script>

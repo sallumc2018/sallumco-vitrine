@@ -67,7 +67,7 @@ const img = image || null
       </div>
     )}
     <a
-      href={link}
+      href={`/produto?link=${encodeURIComponent(link)}`}
       target="_blank"
       rel="noopener noreferrer"
       class="btn-affiliate"

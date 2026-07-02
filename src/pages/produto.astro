@@ -1,0 +1,27 @@
+---
+const url = new URL(Astro.request.url);
+const link = url.searchParams.get('link');
+---
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Redirecionando... | SallumC Co. & Family</title>
+  <meta name="description" content="Redirecionando para o produto na loja parceira" />
+</head>
+<body>
+  <p>Redirecionando para o produto...</p>
+  
+  <script>
+    const link = new URLSearchParams(window.location.search).get('link');
+    if (link) {
+      window.location.href = link;
+    } else {
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
