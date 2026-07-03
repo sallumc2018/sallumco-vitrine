@@ -52,6 +52,15 @@
   .badge-sales {
     @apply absolute bottom-2 left-2 bg-black/60 backdrop-blur text-white text-[10px] px-2 py-0.5 rounded-md;
   }
+  .product-fallback {
+    @apply flex flex-col items-center justify-center gap-3 bg-gradient-to-br from-violet-50 via-white to-amber-50 px-4 text-center;
+  }
+  .product-fallback-mark {
+    @apply flex h-16 w-16 items-center justify-center rounded-2xl border border-brand/10 bg-white shadow-sm;
+  }
+  .product-fallback span {
+    @apply text-xs font-semibold uppercase tracking-wide text-gray-500;
+  }
   .hero-gradient {
     @apply bg-gradient-to-br from-brand via-brand-dark to-violet-900;
   }

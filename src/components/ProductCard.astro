@@ -8,11 +8,14 @@ export interface Props {
   price?: string | null
   discount?: string | null
   sales?: string | null
+  category?: string | null
+  videoOnly?: boolean
 }
-const { name, link, image, price, discount, sales } = Astro.props
+const { name, link, image, price, discount, sales, category, videoOnly = false } = Astro.props
 
 const ctaLabel = getMarketplaceLabel(link)
-const img = image || null
+const img = !videoOnly && image ? image : null
+const fallbackLabel = category || 'Produto selecionado'
 ---
 <article
   class="product-card group"
@@ -31,10 +34,13 @@ const img = image || null
         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
       />
     ) : (
-      <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
-        <svg class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10"/>
-        </svg>
+      <div class="w-full h-full product-fallback">
+        <div class="product-fallback-mark">
+          <svg class="w-9 h-9 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 6h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2z"/>
+          </svg>
+        </div>
+        <span>{fallbackLabel}</span>
       </div>
     )}
     {price ? (

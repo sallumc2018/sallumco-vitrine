@@ -3,6 +3,10 @@ import path from 'node:path'
 
 const root = process.cwd()
 const distDir = path.join(root, 'dist')
+const forbiddenPublicFiles = new Set([
+  'audit.html',
+  'image-review.html',
+])
 const forbiddenPatterns = [
   /\bcommission\b/i,
   /\bcomissao_texto\b/i,
@@ -56,7 +60,18 @@ try {
   process.exit(1)
 }
 
-const files = (await walk(distDir)).filter(isTextAsset)
+const allFiles = await walk(distDir)
+const forbiddenFiles = allFiles
+  .map(filePath => path.relative(distDir, filePath))
+  .filter(relativePath => forbiddenPublicFiles.has(relativePath))
+
+if (forbiddenFiles.length > 0) {
+  console.error('[audit:public] Review-only files found in public build:')
+  for (const filePath of forbiddenFiles) console.error(`- ${filePath}`)
+  process.exit(1)
+}
+
+const files = allFiles.filter(isTextAsset)
 const leaks = []
 
 for (const filePath of files) {

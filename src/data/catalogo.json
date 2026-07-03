@@ -2279,7 +2279,8 @@
           "price": "R$29,98",
           "discount": "31%",
           "sales": "40mil+ vendidos",
-          "image": "/images/0249.jpg"
+          "image": null,
+          "videoOnly": true
         },
         {
           "name": "Inverno Engrossado Esportes Jaqueta De Algodão Masculino Gola Em Pé cardigan casual Roupas Quente",
@@ -2487,7 +2488,8 @@
           "price": "R$13,56",
           "discount": "42%",
           "sales": "100mil+ vendidos",
-          "image": "/images/0275.jpg"
+          "image": null,
+          "videoOnly": true
         },
         {
           "name": "Calça Jeans Masculina Lycra Premium Slim Casual Elegante para o Dia a Dia",
@@ -3355,7 +3357,8 @@
           "discount": null,
           "sales": "591 vendas",
           "descricao": "Chinelo Havaianas Bandeirinha Brasileira Verde Amarela Copa ",
-          "image": "/images/0372.jpg"
+          "image": null,
+          "videoOnly": true
         },
         {
           "name": "Camisa do Brasil Camiseta do Brasil Seleção Brasileira Torcida Brasil Amarela Patriota Torcedor",
@@ -5396,7 +5399,8 @@
           "sales": null,
           "descricao": "Frigideira Multifuncional Antiaderente 4 Em 1 Para Ovos , Hambúrguer , Omelete ,",
           "vendas_texto": null,
-          "image": "/images/0583.jpg"
+          "image": null,
+          "videoOnly": true
         },
         {
           "name": "Calça Masculina Esporte Fino Estilo Social - Sport Fino",

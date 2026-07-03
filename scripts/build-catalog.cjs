@@ -5,6 +5,7 @@ const root = path.resolve(__dirname, '..')
 const sourcePath = path.resolve(root, '../06-conteudo/catalogo/catalogo_unificado.json')
 const outputPath = path.resolve(root, 'src/data/catalogo.json')
 const checkOnly = process.argv.includes('--check')
+const VIDEO_ONLY_INDICES = new Set([249, 275, 372, 583])
 
 const CATEGORY_KEYWORDS = {
   'Casa': ['casa', 'cozinha', 'decoracao', 'moveis', 'mesa', 'cadeira', 'armario', 'tapete', 'panela', 'utensilio', 'organizador', 'luminaria', 'garrafa', 'marmita', 'liquidificador', 'torneira', 'filtro', 'mop', 'churrasco'],
@@ -85,7 +86,7 @@ function readSourceCatalog() {
   return data.produtos
 }
 
-function normalizeProduct(product) {
+function normalizeProduct(product, index) {
   const id = String(product.id || product.itemId || '').trim()
   const name = String(product.nome || product.name || '').trim()
   const link = String(product.link_afiliado || product.link || '').trim()
@@ -94,7 +95,7 @@ function normalizeProduct(product) {
   if (!id || !name || !link) return null
   if (!/^https:\/\/(s\.)?shopee\.com\.br\//.test(link)) return null
 
-  return {
+  const normalized = {
     id,
     nome: name,
     name,
@@ -106,13 +107,20 @@ function normalizeProduct(product) {
     discount: product.discount || null,
     sales: product.sales || product.vendas_texto || null,
   }
+
+  if (VIDEO_ONLY_INDICES.has(index)) {
+    normalized.videoOnly = true
+    normalized.image = null
+  }
+
+  return normalized
 }
 
 function buildCatalog(products) {
   const categories = Object.fromEntries(CATEGORY_ORDER.map(category => [category, []]))
 
-  for (const rawProduct of products) {
-    const product = normalizeProduct(rawProduct)
+  for (const [index, rawProduct] of products.entries()) {
+    const product = normalizeProduct(rawProduct, index)
     if (!product) continue
 
     const category = CATEGORY_LABELS[product.categoria] ? product.categoria : 'Outros'
