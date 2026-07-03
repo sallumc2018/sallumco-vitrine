@@ -7,7 +7,9 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && npm run audit:public",
+    "build": "npm run catalog:check && astro build && npm run audit:public",
+    "catalog:build": "node scripts/build-catalog.cjs",
+    "catalog:check": "node scripts/build-catalog.cjs --check",
     "audit:public": "node scripts/audit-public-output.mjs",
     "preview": "astro preview",
     "astro": "astro"

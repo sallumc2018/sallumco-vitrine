@@ -27,7 +27,7 @@ const withPrice = categories.reduce((acc, cat) => acc + cat.products.filter(p =>
         </h1>
         <p class="text-lg sm:text-xl text-white/80 max-w-2xl mx-auto mb-8 leading-relaxed">
           Achadinhos selecionados com carinho para você e sua família.
-          Qualidade, praticidade e os melhores preços — tudo num só lugar.
+          Utilidade, praticidade e boas oportunidades — tudo num só lugar.
         </p>
         <div class="flex flex-wrap justify-center gap-3">
           <span class="inline-flex items-center gap-2 bg-white/10 backdrop-blur px-4 py-2 rounded-full text-sm">
@@ -238,8 +238,8 @@ const withPrice = categories.reduce((acc, cat) => acc + cat.products.filter(p =>
         <div class="sm:col-span-2">
           <h3 class="font-bold text-lg mb-3 bg-gradient-to-r from-brand to-violet-300 bg-clip-text text-transparent">SallumC Co. & Family</h3>
           <p class="text-gray-400 text-sm leading-relaxed max-w-sm">
-            Selecionamos os melhores achadinhos das principais lojas para você.
-            Qualidade e economia que a família aprova.
+            Selecionamos achadinhos úteis de lojas parceiras para você.
+            Ideias práticas para casa, rotina e família.
           </p>
           <div class="flex gap-3 mt-4">
             <a href="https://instagram.com/sallumc.co" target="_blank" rel="noopener noreferrer" class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center hover:bg-brand hover:scale-110 transition-all" aria-label="Instagram">
@@ -413,6 +413,7 @@ const withPrice = categories.reduce((acc, cat) => acc + cat.products.filter(p =>
       const priceRow = p.price
         ? `<div class="flex items-center gap-2"><span class="text-brand font-bold text-base">${price}</span>${p.discount ? `<span class="text-green-600 text-xs font-semibold">-${discount.replace('%','').replace('-','').trim()}%</span>` : ''}</div>${p.sales ? `<p class="text-gray-400 text-[11px]">${sales}</p>` : ''}` : ''
       const cta = getMarketplaceLabel(p.link)
+      const redirectHref = `/produto?link=${encodeURIComponent(p.link || '')}`
       return `<article class="product-card group">
         <div class="aspect-square relative overflow-hidden bg-gray-100">
           ${img}${priceBadge}${discountBadge}${salesBadge}
@@ -422,7 +423,7 @@ const withPrice = categories.reduce((acc, cat) => acc + cat.products.filter(p =>
         <div class="p-3 space-y-2">
           <h3 class="font-medium text-gray-900 text-sm line-clamp-2 leading-snug min-h-[2.5em]">${name}</h3>
           <div class="space-y-0.5">${priceRow}</div>
-          <a href="${link}" target="_blank" rel="noopener noreferrer" class="btn-affiliate">
+          <a href="${redirectHref}" target="_blank" rel="noopener noreferrer" class="btn-affiliate">
             <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
             ${cta}
           </a>

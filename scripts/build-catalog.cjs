@@ -1,44 +1,205 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require('fs')
+const path = require('path')
 
-const catalogPath = path.resolve(__dirname, '../../06-conteudo/catalogo/catalogo_unificado.json');
-const catalog = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));
+const root = path.resolve(__dirname, '..')
+const sourcePath = path.resolve(root, '../06-conteudo/catalogo/catalogo_unificado.json')
+const outputPath = path.resolve(root, 'src/data/catalogo.json')
+const checkOnly = process.argv.includes('--check')
 
-const CLASSIFY_KEYWORDS = {
-  "Casa": ["casa", "cozinha", "decoracao", "moveis", "sofa", "mesa", "cadeira", "estante", "armario", "coberta", "tapete", "almofada", "cortina", "toalha", "panela", "prato", "copo", "xicara", "utensilio", "organizador", "luminaria", "abajur", "vaso", "quadro", "espelho", "baba", "pet", "cachorro", "gato", "racao", "brinquedo", "fralda", "infantil", "berco", "carrinho", "mamadeira", "chuva", "guarda", "sapato", "bolsa", "mochila", "balanca", "pote", "hermetico", "marmita", "frigideira", "prateleira", "suporte", "porta", "sabonete", "dispenser", "garrafa", "cantil", "squeeze", "lancheira", "cadeado", "escada", "banco", "poltrona", "rede", "balde", "lixeira", "cesto", "mixer", "liquidificador", "cozedor", "ovos", "vapor", "silicone", "antiaderente", "vassoura", "pia", "torneira", "cafe", "coador", "inox", "filtro", "mop", "spray", "refil", "microfibra", "reservatorio", "ralador", "legumes", "fatiador", "rack", "aluminio", "dourado", "mini", "portatil", "shaker", "garrafa termica", "thermo", "jogo talheres", "escovao", "detergente", "esponja", "alcool", "limpador", "desinfetante", "lanterna", "pilha", "carne", "churrasco", "churrasqueira", "facas"],
-  "Roupas e Acessorios": ["roupa", "camisa", "camiseta", "blusa", "calca", "calça", "short", "bermuda", "vestido", "saia", "jaqueta", "casaco", "moletom", "pijama", "cueca", "meia", "bone", "chapeu", "chapéu", "acessorio", "cinto", "oculos", "relogio", "pulseira", "anel", "brinco", "colar", "mochila", "bolsa", "tenis", "sapato", "chinelo", "bota", "fivela", "cano", "zip", "slip", "sapatilha", "ortopedico", "esportivo", "termica", "peluciada", "manga", "longa", "roupao", "robe", "pashmina", "ecobag", "impermeavel", "blusao", "sueter", "cardigan", "colete", "jeans", "legging", "corta-vento", "rock saints", "flamengo", "uniforme", "chuteira", "bermudao", "bucket", "hat"],
-  "Bem-estar": ["massagem", "massageador", "pistola", "yoga", "fitness", "exercicio", "academia", "relaxamento", "aroma", "vitamina", "suplemento", "cosmetico", "skincare", "hidratante", "protetor", "shampoo", "condicionador", "perfume", "maquiagem", "unha", "cabelo", "barba", "barbeador", "escova", "pente", "creatina", "whey", "proteina", "monohidratada", "halter", "elastico", "glicemia", "glicose", "termometro", "nebulizador", "inalador", "repelente", "higiene", "orelha", "dormir", "sono", "estresse", "ansiedade", "creme", "locao", "tonico capilar", "omega 3", "oleo de peixe", "castanha", "nuts", "facial", "colageno", "sobrancelha", "barbear", "aparador", "pelos", "pressão arterial", "bioimpedancia", "saude", "abs", "abdomen", "barriga", "faixa elastica", "peso"],
-  "Copa do Mundo": ["copa", "mundo", "2026", "brasil", "selecao", "verde", "amarelo", "azul", "bandeira", "futebol", "torcedor", "rabiola", "faixa decorativa", "vibes", "bucket", "chapéu", "chapeu", "hat", "copo termico", "personalizado", "abridor", "gol", "champions", "estadio", "campeao", "taca", "pele", "neymar", "copa do mundo"],
-  "Tecnologia": ["celular", "smartphone", "carregador", "cabo", "fone", "ouvido", "caixa som", "bluetooth", "wi-fi", "wifi", "roteador", "computador", "notebook", "mouse", "teclado", "monitor", "webcam", "microfone", "hdmi", "usb", "memoria", "ssd", "gadget", "smart", "digital", "camera", "drone", "medidor pressao", "repetidor", "sinal", "antena", "alarme", "sensor", "tomada", "adaptador", "hub", "led", "lampada", "controle remoto", "fechadura", "catraca", "roleta", "credencial", "cadeado digital", "inteligente", "braco", "tecnologia", "eletronico", "portatil"],
-  "Mamãe e Papai": ["mamae", "papai", "mae", "pai", "gestante", "gravida", "maternidade", "enxoval", "bebe conforto", "cadeira alimentacao", "mamadeira", "chupeta", "fralda", "babador", "brinquedo infantil", "infantil", "kids", "crianca", "talheres silicone", "ventosa", "colher", "garfo", "nebulizador portatil", "mini inalador", "bebe"],
-  "Cama, mesa e banho": ["lençol", "lenco", "fronha", "toalha banho", "travesseiro", "colcha", "edredom", "cobertor", "cobre", "jogo de cama", "jogo de banho", "pluma", "ganso", "anticaro", "algodão", "secagem", "micropercal", "400 fios", "edredom", "cobre leito"]
-};
+const CATEGORY_KEYWORDS = {
+  'Casa': ['casa', 'cozinha', 'decoracao', 'moveis', 'mesa', 'cadeira', 'armario', 'tapete', 'panela', 'utensilio', 'organizador', 'luminaria', 'garrafa', 'marmita', 'liquidificador', 'torneira', 'filtro', 'mop', 'churrasco'],
+  'Roupas e Acessorios': ['roupa', 'camisa', 'camiseta', 'blusa', 'calca', 'short', 'vestido', 'jaqueta', 'casaco', 'moletom', 'meia', 'bone', 'chapeu', 'oculos', 'relogio', 'bolsa', 'tenis', 'sapato', 'chinelo', 'bota'],
+  'Bem-estar': ['massagem', 'fitness', 'exercicio', 'academia', 'skincare', 'hidratante', 'protetor', 'shampoo', 'perfume', 'maquiagem', 'cabelo', 'barba', 'creatina', 'whey', 'termometro', 'higiene', 'colageno', 'saude'],
+  'Copa do Mundo': ['copa', 'mundo', '2026', 'brasil', 'selecao', 'verde', 'amarelo', 'futebol', 'torcedor', 'estadio'],
+  'Tecnologia': ['celular', 'smartphone', 'carregador', 'cabo', 'fone', 'bluetooth', 'wifi', 'notebook', 'mouse', 'teclado', 'monitor', 'webcam', 'microfone', 'hdmi', 'usb', 'camera', 'smart', 'sensor', 'tomada', 'led'],
+  'Mamae e Papai': ['mamae', 'papai', 'mae', 'pai', 'gestante', 'maternidade', 'bebe', 'fralda', 'babador', 'infantil', 'crianca', 'nebulizador'],
+  'Cama, mesa e banho': ['lencol', 'fronha', 'toalha', 'travesseiro', 'colcha', 'edredom', 'cobertor', 'jogo de cama', 'algodao'],
+}
+
+const CATEGORY_LABELS = {
+  'Casa': 'Casa',
+  'Roupas e Acessorios': 'Roupas e Acessorios',
+  'Bem-estar': 'Bem-estar',
+  'Copa do Mundo': 'Copa do Mundo',
+  'Tecnologia': 'Tecnologia',
+  'Cama, mesa e banho': 'Cama, mesa e banho',
+  'Mamae e Papai': 'Mamae e Papai',
+  'Outros': 'Outros',
+}
+
+const CATEGORY_ORDER = [
+  'Casa',
+  'Roupas e Acessorios',
+  'Bem-estar',
+  'Copa do Mundo',
+  'Tecnologia',
+  'Cama, mesa e banho',
+  'Mamae e Papai',
+  'Outros',
+]
+
+function normalizeText(value) {
+  return String(value || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+}
+
+function slugify(value) {
+  return normalizeText(value)
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+}
 
 function classify(name) {
-  const normalized = name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  let bestCat = 'Outros';
-  let bestScore = 0;
-  for (const [cat, words] of Object.entries(CLASSIFY_KEYWORDS)) {
-    let score = 0;
-    for (const w of words) {
-      if (normalized.includes(w)) score += (w.includes(' ') ? 2 : 1);
+  const normalized = normalizeText(name)
+  let bestCategory = 'Outros'
+  let bestScore = 0
+
+  for (const [category, words] of Object.entries(CATEGORY_KEYWORDS)) {
+    let score = 0
+    for (const word of words) {
+      if (normalized.includes(normalizeText(word))) {
+        score += word.includes(' ') ? 2 : 1
+      }
     }
-    if (score > bestScore) { bestScore = score; bestCat = cat; }
+    if (score > bestScore) {
+      bestScore = score
+      bestCategory = category
+    }
   }
-  return bestCat;
+
+  return bestCategory
 }
 
-const categories = {};
-for (const p of catalog.produtos) {
-  const cat = classify(p.name);
-  if (!categories[cat]) categories[cat] = [];
-  categories[cat].push({ name: p.name, link: p.link, image: `https://cf.shopee.com.br/file/${p.itemId}_1000w.jpg`, price: null });
+function readSourceCatalog() {
+  if (!fs.existsSync(sourcePath)) {
+    throw new Error(`Catalogo fonte nao encontrado: ${sourcePath}`)
+  }
+
+  const data = JSON.parse(fs.readFileSync(sourcePath, 'utf8'))
+  if (!Array.isArray(data.produtos)) {
+    throw new Error('Catalogo fonte invalido: esperado objeto com array "produtos".')
+  }
+
+  return data.produtos
 }
 
-const categoryOrder = ["Casa", "Roupas e Acessórios", "Bem-estar", "Copa do Mundo", "Tecnologia", "Cama, mesa e banho", "Mamãe e Papai", "Outros"];
-const output = {
-  categories: categoryOrder.map(name => ({ name, slug: name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''), products: categories[name] || [] }))
-};
+function normalizeProduct(product) {
+  const id = String(product.id || product.itemId || '').trim()
+  const name = String(product.nome || product.name || '').trim()
+  const link = String(product.link_afiliado || product.link || '').trim()
+  const category = product.categoria || classify(name)
 
-fs.writeFileSync(path.resolve(__dirname, '../src/data/catalogo.json'), JSON.stringify(output, null, 2));
-console.log(`Built: ${output.categories.reduce((s,c) => s + c.products.length, 0)} products`);
+  if (!id || !name || !link) return null
+  if (!/^https:\/\/(s\.)?shopee\.com\.br\//.test(link)) return null
+
+  return {
+    id,
+    nome: name,
+    name,
+    link_afiliado: link,
+    link,
+    categoria: CATEGORY_LABELS[category] || 'Outros',
+    image: product.image || `https://cf.shopee.com.br/file/${id}_1000w.jpg`,
+    price: product.preco || product.price || null,
+    discount: product.discount || null,
+    sales: product.sales || product.vendas_texto || null,
+  }
+}
+
+function buildCatalog(products) {
+  const categories = Object.fromEntries(CATEGORY_ORDER.map(category => [category, []]))
+
+  for (const rawProduct of products) {
+    const product = normalizeProduct(rawProduct)
+    if (!product) continue
+
+    const category = CATEGORY_LABELS[product.categoria] ? product.categoria : 'Outros'
+    categories[category].push(product)
+  }
+
+  return {
+    categories: CATEGORY_ORDER.map(name => ({
+      name,
+      slug: slugify(name),
+      products: categories[name],
+    })).filter(category => category.products.length > 0),
+  }
+}
+
+function validatePublicCatalog(catalog) {
+  const privateFields = new Set(['commission', 'comissao_texto', 'taxa_comissao'])
+  const failures = []
+  let count = 0
+
+  for (const category of catalog.categories) {
+    for (const product of category.products) {
+      count += 1
+      for (const field of Object.keys(product)) {
+        if (privateFields.has(field)) failures.push(`${product.id}: campo privado ${field}`)
+      }
+      for (const required of ['id', 'nome', 'link_afiliado', 'categoria', 'name', 'link']) {
+        if (!product[required]) failures.push(`${product.id || '(sem id)'}: campo obrigatorio ${required}`)
+      }
+    }
+  }
+
+  if (count === 0) failures.push('nenhum produto publico gerado')
+  if (failures.length) {
+    throw new Error(`Catalogo publico invalido:\n- ${failures.slice(0, 20).join('\n- ')}`)
+  }
+
+  return count
+}
+
+function validateCurrentCatalog(catalog) {
+  if (!Array.isArray(catalog.categories)) {
+    throw new Error('Catalogo da vitrine invalido: esperado array "categories".')
+  }
+
+  const privateFields = new Set(['commission', 'comissao_texto', 'taxa_comissao'])
+  const failures = []
+  let count = 0
+
+  for (const category of catalog.categories) {
+    if (!category.name || !category.slug || !Array.isArray(category.products)) {
+      failures.push(`categoria invalida: ${category.name || '(sem nome)'}`)
+      continue
+    }
+
+    for (const product of category.products) {
+      count += 1
+      for (const field of Object.keys(product)) {
+        if (privateFields.has(field)) {
+          failures.push(`${product.name || product.nome || '(sem nome)'}: campo privado ${field}`)
+        }
+      }
+      if (!product.name && !product.nome) failures.push('produto sem nome')
+      if (!product.link && !product.link_afiliado) failures.push(`${product.name || product.nome || '(sem nome)'}: produto sem link`)
+    }
+  }
+
+  if (count === 0) failures.push('nenhum produto encontrado no catalogo atual')
+  if (failures.length) {
+    throw new Error(`Catalogo atual invalido:\n- ${failures.slice(0, 20).join('\n- ')}`)
+  }
+
+  return count
+}
+
+if (checkOnly) {
+  if (!fs.existsSync(outputPath)) {
+    throw new Error(`Catalogo da vitrine nao encontrado: ${outputPath}`)
+  }
+  const currentCatalog = JSON.parse(fs.readFileSync(outputPath, 'utf8'))
+  const currentCount = validateCurrentCatalog(currentCatalog)
+  console.log(`[catalog:check] OK: ${currentCount} produtos publicos.`)
+} else {
+  const catalog = buildCatalog(readSourceCatalog())
+  const count = validatePublicCatalog(catalog)
+  const serialized = `${JSON.stringify(catalog, null, 2)}\n`
+
+  fs.writeFileSync(outputPath, serialized)
+  console.log(`[catalog:build] OK: ${count} produtos publicos em ${path.relative(root, outputPath)}.`)
+}

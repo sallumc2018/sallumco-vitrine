@@ -1,6 +1,4 @@
 ---
-const url = new URL(Astro.request.url);
-const link = url.searchParams.get('link');
 ---
 
 <!DOCTYPE html>
@@ -9,17 +7,34 @@ const link = url.searchParams.get('link');
   <meta charset="utf-8" />
   <title>Redirecionando... | SallumC Co. & Family</title>
   <meta name="description" content="Redirecionando para o produto na loja parceira" />
+  <meta name="robots" content="noindex, nofollow" />
 </head>
 <body>
   <p>Redirecionando para o produto...</p>
   
   <script>
-    const link = new URLSearchParams(window.location.search).get('link');
-    if (link) {
-      window.location.href = link;
+    const allowedHosts = new Set([
+      'shopee.com.br',
+      'www.shopee.com.br',
+      's.shopee.com.br',
+    ]);
+    const rawLink = new URLSearchParams(window.location.search).get('link');
+    let safeLink = '';
+
+    if (rawLink) {
+      try {
+        const target = new URL(rawLink);
+        if (target.protocol === 'https:' && allowedHosts.has(target.hostname)) {
+          safeLink = target.toString();
+        }
+      } catch {}
+    }
+
+    if (safeLink) {
+      window.location.replace(safeLink);
     } else {
       setTimeout(() => {
-        window.location.href = '/';
+        window.location.replace('/');
       }, 2000);
     }
   </script>
