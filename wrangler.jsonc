@@ -1,8 +1,5 @@
 {
   "name": "sallumco-vitrine",
   "compatibility_date": "2026-07-01",
-  "pages_build_output_dir": "./dist",
-  "assets": {
-    "directory": "./dist"
-  }
+  "pages_build_output_dir": "./dist"
 }
